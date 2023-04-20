@@ -17,7 +17,7 @@ namespace VetClinicServer.BusinessLogic.Implementations
         public JwtSecurityToken GenerateJwtToken(User user)
         {
             var claims = new List<Claim> {
-            new Claim(JwtRegisteredClaimNames.NameId, user.Login),
+            new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
              new Claim(ClaimTypes.Role, user.Role.Name.ToString())};
             var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512);
             var tokenDescriptor = new JwtSecurityToken(

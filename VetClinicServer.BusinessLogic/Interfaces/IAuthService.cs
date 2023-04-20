@@ -4,6 +4,6 @@ namespace VetClinicServer.BusinessLogic.Interfaces
 {
     public interface IAuthService
     {
-        Task<UserDto> AuthenticateAsync(UserLoginDto userLoginDto);
+        UserDto Authenticate(UserLoginDto userLoginDto);
     }
 }

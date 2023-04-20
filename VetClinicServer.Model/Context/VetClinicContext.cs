@@ -8,7 +8,7 @@ namespace VetClinicServer.Model.Context
         public VetClinicContext(DbContextOptions<VetClinicContext> options)
             : base(options)
         {
-            //Database.EnsureDeleted();
+            Database.EnsureDeleted();
             Database.EnsureCreated();
         }
         public DbSet<Animal> Animals { get; set; } = null!;

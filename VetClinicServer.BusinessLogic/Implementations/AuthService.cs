@@ -1,24 +1,25 @@
 ﻿using VetClinicServer.BusinessLogic.Interfaces;
 using VetClinicServer.Common.Dto;
+using VetClinicServer.Model.Models;
 
 namespace VetClinicServer.BusinessLogic.Implementations
 {
     public class AuthService : IAuthService
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUserService _userRepository;
         private readonly IHashService _hashService;
         private readonly ITokenService _tokenService;
 
-        public AuthService(IUserRepository userRepository, IHashService hashService, ITokenService tokenService)
+        public AuthService(IUserService userRepository, IHashService hashService, ITokenService tokenService)
         {
             _userRepository = userRepository;
             _hashService = hashService;
             _tokenService = tokenService;
         }
 
-        public async Task<UserDto> AuthenticateAsync(UserLoginDto userLoginDto)
+        public UserDto Authenticate(UserLoginDto userLoginDto)
         {
-            var user = await _userRepository.GetUserByLoginAsync(userLoginDto.Login);
+            var user = _userRepository.GetByLogin(userLoginDto.Login);
 
             if (user == null)
             {
@@ -30,7 +31,7 @@ namespace VetClinicServer.BusinessLogic.Implementations
                 throw new Exception("Неверный пароль");
             }
             var token = _tokenService.GetToken(user);
-            var userDto = new UserDto { Login = user.Login, Email = user.Email, Role = new RoleDto { Name = user.Role.Name.ToString() }, AuthorizationHeader = $"Bearer {token}" };
+            var userDto = new UserDto { Login = user.Login, Email = user.Email, Role = new Role { Name = user.Role.Name }, AuthorizationHeader = $"Bearer {token}" };
             return userDto;
         }
     }

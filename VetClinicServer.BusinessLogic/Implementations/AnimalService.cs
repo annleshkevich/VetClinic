@@ -17,6 +17,10 @@ namespace VetClinicServer.BusinessLogic.Implementations
         {
             return _db.Animals.AsNoTracking().ToList();
         }
+        public Animal Get(int id)
+        {
+            return _db.Animals.FirstOrDefault(x => x.Id == id);
+        }
         public bool Create(AnimalDto animalDto)
         {
             Animal animal = new Animal();
@@ -47,6 +51,5 @@ namespace VetClinicServer.BusinessLogic.Implementations
             var saved = _db.SaveChanges();
             return saved > 0 ? true : false;
         }
-
     }
 }

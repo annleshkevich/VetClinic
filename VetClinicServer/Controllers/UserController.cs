@@ -1,86 +1,53 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using VetClinicServer.BusinessLogic.Implementations;
 using VetClinicServer.BusinessLogic.Interfaces;
+using VetClinicServer.Common.Dto;
 using VetClinicServer.Model.Models;
 
 namespace VetClinicServer.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize(Roles = "Admin")]
     public class UserController : Controller
     {
         private readonly ILogger<UserController> _logger;
-        private readonly IUserRepository _userRepository;
-        public UserController(IUserRepository userRepository, ILogger<UserController> logger)
+        private readonly IUserService _userService;
+        public UserController(IUserService userService, ILogger<UserController> logger)
         {
-            _userRepository = userRepository;
+            _userService = userService;
             _logger = logger;
         }
 
-        [HttpGet("GetUser/{id}")]
-        public async Task<IActionResult> Get(int id)
+        [HttpPost("Create")]
+        [Authorize]
+        public IActionResult Post(User user)
         {
-            try
-            {
-                var user = await _userRepository.GetUserByIdAsync(id);
-                return Ok(user);
-            }
-            catch (Exception ex)
-            {
-
-                _logger.LogInformation(ex.Message);
-                return BadRequest(ex.Message);
-            }
+            return _userService.Create(user) ? Ok("User has been created") : BadRequest("User not created");
         }
-
-        [HttpPut("PutUser/{id}")]
-        public async Task<IActionResult> Update(User user)
+        [HttpPut("Update/{id}")]
+        [Authorize]
+        public IActionResult Put(User user)
         {
-            try
+            var currentUser = HttpContext.User;
+            if (user.Id != int.Parse(currentUser.FindFirstValue(JwtRegisteredClaimNames.NameId)) || currentUser.FindFirstValue(ClaimTypes.Role) != "2")
             {
-                var existingUser = await _userRepository.GetUserByIdAsync(user.Id);
-                if (existingUser == null)
-                {
-                    return NotFound();
-                }
-
-                existingUser.Login = user.Login;
-                existingUser.Email = user.Email;
-                existingUser.RoleId = user.RoleId;
-                existingUser.Role = null;
-                await _userRepository.UpdateUserAsync(existingUser);
-
-                return Ok(existingUser);
+                return Forbid();
             }
-            catch (Exception ex)
-            {
-                _logger.LogInformation(ex.Message);
-                return BadRequest(ex.Message);
-            }
+            return _userService.Update(user) ? Ok("User has been updated") : BadRequest("User not updated");
         }
-
-        [HttpDelete("DeleteUser/{id}")]
-        public async Task<IActionResult> Delete(int id)
+        [HttpDelete("Delete {id}")]
+        [Authorize]
+        public IActionResult Delete(int id)
         {
-            try
+            var currentUser = HttpContext.User;
+            if (id != int.Parse(currentUser.FindFirstValue(JwtRegisteredClaimNames.NameId)) || currentUser.FindFirstValue(ClaimTypes.Role) != "2")
             {
-                var user = await _userRepository.GetUserByIdAsync(id);
-                if (user == null)
-                {
-                    return NotFound();
-                }
-
-                await _userRepository.DeleteUserAsync(user);
-
-                return Ok();
+                return Forbid();
             }
-            catch (Exception ex)
-            {
-                _logger.LogInformation(ex.Message);
-
-                return BadRequest(ex.Message);
-            }
+            return _userService.Delete(id) ? Ok("User has been removed") : BadRequest("User not deleted");
         }
     }
 }

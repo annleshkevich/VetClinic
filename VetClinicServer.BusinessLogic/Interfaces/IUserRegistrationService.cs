@@ -5,6 +5,6 @@ namespace VetClinicServer.BusinessLogic.Interfaces
 {
     public interface IUserRegistrationService
     {
-        Task<User> RegisterAsync(UserRegistrationDto userDto);
+        User Register(UserRegistrationDto userDto);
     }
 }

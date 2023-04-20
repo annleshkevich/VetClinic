@@ -7,5 +7,9 @@ namespace VetClinicServer.BusinessLogic.Interfaces
     {
         IEnumerable<Appointment> AllAppointments();
         List<Appointment> Get(AppointmentDto model);
+        Appointment Get(int id);
+        bool Create(AppointmentDto model);
+        bool Update(AppointmentDto model);
+        bool Delete(int id);
     }
 }

@@ -7,13 +7,11 @@ namespace VetClinicServer.Model.Models
     {
         [Key]
         public int Id { get; set; }
-        public DateTime CreatedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
         [ForeignKey("AnimalId")]
         public int? AnimalId { get; set; }
         public Animal Animal { get; set; } = new Animal();
         public string BehavioralNote { get; set; } = string.Empty;
         public string Complaint { get; set; } = string.Empty;
-
-        // public ushort Price { get; set; }
     }
 }

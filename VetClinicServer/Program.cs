@@ -22,19 +22,27 @@ builder.Services.AddControllers();
 
 using (VetClinicContext db = new(options))
 {
+    User user = new()
+    {
+        Login = "",
+        Email = ""
+
+    };
     Animal animal1 = new()
     {
         Name = "Soa",
         Age = 4,
         Breed = "Poodle",
-        Img = "https://kisapes.ru/wp-content/uploads/2021/05/toy-poodle.jpg"
+        Img = "https://kisapes.ru/wp-content/uploads/2021/05/toy-poodle.jpg",
+        User = user
     };
     Animal animal2 = new()
     {
         Name = "Poo",
         Age = 7,
         Breed = "Poodle",
-        Img = "https://www.purina.ru/sites/default/files/styles/nppe_breed_selector_500/public/2020-04/poodle_toy.jpg?itok=3auArWUi"
+        Img = "https://www.purina.ru/sites/default/files/styles/nppe_breed_selector_500/public/2020-04/poodle_toy.jpg?itok=3auArWUi",
+        User = user
     };
     db.Animals.AddRange(animal1, animal2);
 
@@ -53,6 +61,7 @@ using (VetClinicContext db = new(options))
         Animal = animal1
     };
     db.Appointments.AddRange(appointment1, appointment2);
+
     db.SaveChanges();
 }
 
@@ -94,7 +103,7 @@ builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<IHashService, HashService>();
 builder.Services.AddTransient<ITokenService, TokenService>();
 builder.Services.AddTransient<IUserRegistrationService, UserRegistrationService>();
-builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

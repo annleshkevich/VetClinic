@@ -8,7 +8,6 @@ namespace VetClinicServer.BusinessLogic.Implementations
 {
     public class AppointmentService : IAppointmentService
     {
-        //private readonly IAnimalService _animal;
         public readonly VetClinicContext _db;
         public AppointmentService(VetClinicContext db)
         {
@@ -17,6 +16,10 @@ namespace VetClinicServer.BusinessLogic.Implementations
         public IEnumerable<Appointment> AllAppointments()
         {
             return _db.Appointments.AsNoTracking().ToList();
+        }
+        public Appointment Get(int id)
+        {
+            return _db.Appointments.FirstOrDefault(x=>x.Id==id);
         }
 
         public List<Appointment> Get(AppointmentDto model)
@@ -43,8 +46,6 @@ namespace VetClinicServer.BusinessLogic.Implementations
             appointment.BehavioralNote = appointmentDto.BehavioralNote;
             appointment.Animal = appointmentDto.Animal;
             appointment.Complaint = appointment.Complaint;
-
-
             _db.Appointments.Add(appointment);
             return Save();
         }

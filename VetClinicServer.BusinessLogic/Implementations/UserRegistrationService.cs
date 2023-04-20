@@ -11,33 +11,33 @@ namespace VetClinicServer.BusinessLogic.Implementations
 {
     public class UserRegistrationService : IUserRegistrationService
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUserService _userService;
         private readonly IHashService _hashService;
 
-        public UserRegistrationService(IUserRepository userRepository, IHashService hashService)
+        public UserRegistrationService(IUserService userService, IHashService hashService)
         {
-            _userRepository = userRepository;
+            _userService = userService;
             _hashService = hashService;
         }
 
-        public async Task<User> RegisterAsync(UserRegistrationDto userDto)
+        public User Register(UserRegistrationDto userRegistrationDto)
         {
-            if (await _userRepository.GetUserByLoginAsync(userDto.Login) != null)
+            if (_userService.GetByLogin(userRegistrationDto.Login) != null)
             {
                 throw new Exception("Пользователь с таким логином уже существует");
             }
 
-            _hashService.CreatePasswordHash(userDto.Password, out byte[] passwordHash, out byte[] passwordSalt);
+            _hashService.CreatePasswordHash(userRegistrationDto.Password, out byte[] passwordHash, out byte[] passwordSalt);
+
             var user = new User
             {
-                Login = userDto.Login,
-                Email = userDto.Email,
+                Login = userRegistrationDto.Login,
+                Email = userRegistrationDto.Email,
+                RoleId = 1,
                 PasswordHash = passwordHash,
-                PasswordSalt = passwordSalt,
-                RoleId = 1
+                PasswordSalt = passwordSalt
             };
-
-            await _userRepository.CreateUserAsync(user);
+            _userService.Create(user);
             return user;
         }
     }

@@ -20,11 +20,11 @@ namespace VetClinicServer.Controllers
             _userRegistrationService = userRegistrationService;
         }
         [HttpPost("Login")]
-        public async Task<IActionResult> Get(UserLoginDto userDto)
+        public IActionResult Get(UserLoginDto userDto)
         {
             try
             {
-                var user = await _authService.AuthenticateAsync(userDto);
+                var user = _authService.Authenticate(userDto);
                 return Ok(user);
             }
             catch (Exception ex)
@@ -33,11 +33,11 @@ namespace VetClinicServer.Controllers
             }
         }
         [HttpPost("Registration")]
-        public async Task<IActionResult> Create(UserRegistrationDto user)
+        public IActionResult Create(UserRegistrationDto user)
         {
             try
             {
-                await _userRegistrationService.RegisterAsync(user);
+                _userRegistrationService.Register(user);
                 return Ok(user);
             }
             catch (Exception ex)
