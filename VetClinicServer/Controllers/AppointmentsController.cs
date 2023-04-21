@@ -31,7 +31,7 @@ namespace VetClinicServer.Controllers
         }
         [HttpGet("Find")]
         [Authorize]
-        public IActionResult Get(AppointmentDto appointment)
+        public IActionResult Get(AppoinmentFilterDto appointment)
         {
             var result = _appointmentService.Get(appointment);
             return Ok(result);
@@ -41,37 +41,37 @@ namespace VetClinicServer.Controllers
         [Authorize]
         public IActionResult Post(AppointmentDto appointment)
         {
-            var currentUser = HttpContext.User;
-            if (appointment.Animal.User.Id != int.Parse(currentUser.FindFirstValue(JwtRegisteredClaimNames.NameId)) || currentUser.FindFirstValue(ClaimTypes.Role) != "2")
-            {
-                return Forbid();
-            }
             return _appointmentService.Create(appointment) ? Ok("Appointment has been created") : BadRequest("Appointment not created");
         }
 
-        [HttpPut("Update}")]
+        [HttpPut("Update")]
         [Authorize]
-        public IActionResult Put(AppointmentDto appointment)
+        public IActionResult Put(AppointmentDto appointmentDto)
         {
             var currentUser = HttpContext.User;
-            if (appointment.Animal.User.Id != int.Parse(currentUser.FindFirstValue(JwtRegisteredClaimNames.NameId)) || currentUser.FindFirstValue(ClaimTypes.Role) != "2")
+            var appointment = _appointmentService.Get(appointmentDto.Id);
+            if (appointment.Animal.UserId != int.Parse(currentUser.FindFirstValue("sub")) || currentUser.FindFirstValue(ClaimTypes.Role) != "2")
             {
                 return Forbid();
             }
+            appointment.BehavioralNote = appointment.BehavioralNote;
+            appointment.CreatedDate = appointmentDto.CreatedDate;
+            //дописать пораметры
             return _appointmentService.Update(appointment) ? Ok("Appointment has been updated") : BadRequest("Appointment not updated");
         }
 
-        [HttpDelete("Delete {id}")]
+        [HttpDelete("Delete/{id}")]
         [Authorize]
         public IActionResult DeleteForUser(int id)
         {
             var currentUser = HttpContext.User;
             var appointment = _appointmentService.Get(id);
-            if (appointment.Animal.User.Id != int.Parse(currentUser.FindFirstValue(JwtRegisteredClaimNames.NameId)) || currentUser.FindFirstValue(ClaimTypes.Role) != "2")
+            if (appointment.Animal.UserId == int.Parse(currentUser.FindFirstValue("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")) || currentUser.FindFirstValue(ClaimTypes.Role) == "2")
             {
-                return Forbid();
-            }
             return _appointmentService.Delete(id) ? Ok("Appointment has been removed") : BadRequest("Appointment not deleted");
+
+            }
+            return Forbid();
         }
     }
 }

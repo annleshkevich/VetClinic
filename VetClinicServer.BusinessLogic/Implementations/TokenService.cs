@@ -10,15 +10,17 @@ namespace VetClinicServer.BusinessLogic.Implementations
     public class TokenService : ITokenService
     {
         private readonly SymmetricSecurityKey _key;
-        public TokenService(IConfiguration configuration)
+        public TokenService()
         {
             _key = AuthOptions.GetSymmetricSecurityKey();
         }
         public JwtSecurityToken GenerateJwtToken(User user)
         {
             var claims = new List<Claim> {
-            new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
-             new Claim(ClaimTypes.Role, user.Role.Name.ToString())};
+        new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+        new Claim(ClaimTypes.Role, user.Role.Name.ToString())
+    };
+
             var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512);
             var tokenDescriptor = new JwtSecurityToken(
                 issuer: AuthOptions.ISSUER,
@@ -27,6 +29,7 @@ namespace VetClinicServer.BusinessLogic.Implementations
                 expires: DateTime.UtcNow.AddDays(7),
                 signingCredentials: creds,
                 notBefore: DateTime.UtcNow);
+
             return tokenDescriptor;
         }
         public string GetToken(User user)

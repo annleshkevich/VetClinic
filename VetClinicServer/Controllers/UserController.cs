@@ -38,7 +38,7 @@ namespace VetClinicServer.Controllers
             }
             return _userService.Update(user) ? Ok("User has been updated") : BadRequest("User not updated");
         }
-        [HttpDelete("Delete {id}")]
+        [HttpDelete("Delete/{id}")]
         [Authorize]
         public IActionResult Delete(int id)
         {

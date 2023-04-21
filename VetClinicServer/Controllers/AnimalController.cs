@@ -33,7 +33,7 @@ namespace VetClinicServer.Controllers
             return _animalService.Create(animal) ? Ok("Animal has been created") : BadRequest("Animal not created");
         }
 
-        [HttpPut("Update}")]
+        [HttpPut("Update")]
         [Authorize]
         public IActionResult Put(AnimalDto animal)
         {
@@ -45,7 +45,7 @@ namespace VetClinicServer.Controllers
             return _animalService.Update(animal) ? Ok("Animal has been updated") : BadRequest("Animal not updated");
         }
 
-        [HttpDelete("Delete {id}")]
+        [HttpDelete("Delete/{id}")]
         [Authorize]
         public IActionResult Delete(int id)
         {

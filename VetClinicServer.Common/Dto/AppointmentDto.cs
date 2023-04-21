@@ -4,8 +4,9 @@ namespace VetClinicServer.Common.Dto
 {
     public class AppointmentDto
     {
+        public int Id { get; set; }
         public DateTime CreatedDate { get; set; }
-        public Animal Animal { get; set; } = new Animal();
+        public int? AnimalId { get; set; }
         public string BehavioralNote { get; set; } = string.Empty;
         public string Complaint { get; set; } = string.Empty;
     }

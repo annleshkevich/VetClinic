@@ -7,7 +7,7 @@ namespace VetClinicServer
     {
         public const string ISSUER = "MyAuthServer"; 
         public const string AUDIENCE = "MyAuthClient"; 
-        const string KEY = "MyKey";  
+        const string KEY = "MyKeuihyugyufgtfrtderdhhuigtydeffty";  
         public static SymmetricSecurityKey GetSymmetricSecurityKey() =>
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(KEY));
     }

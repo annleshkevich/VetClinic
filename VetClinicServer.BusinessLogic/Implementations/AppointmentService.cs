@@ -19,23 +19,23 @@ namespace VetClinicServer.BusinessLogic.Implementations
         }
         public Appointment Get(int id)
         {
-            return _db.Appointments.FirstOrDefault(x=>x.Id==id);
+            return _db.Appointments.Include(x=>x.Animal).FirstOrDefault(x=>x.Id==id);
         }
 
-        public List<Appointment> Get(AppointmentDto model)
+        public List<Appointment> Get(AppoinmentFilterDto model)
         {
             var list = _db.Appointments.AsQueryable();
-            if (model.Animal.Breed is not null)
+            if (model.Breed is not null)
             {
-                list = list.Where(x => x.Animal.Breed.Contains(model.Animal.Breed.ToLower()));
+                list = list.Where(x => x.Animal.Breed.Contains(model.Breed.ToLower()));
             }
-            if (model.Animal.Name is not null)
+            if (model.Name is not null)
             {
-                list = list.Where(x => x.Animal.Name.Contains(model.Animal.Name.ToLower()));
+                list = list.Where(x => x.Animal.Name.Contains(model.Name.ToLower()));
             }
-            if (model.CreatedDate != null)
+            if (model.DateCreated != null)
             {
-                list = list.Where(x => x.CreatedDate == model.CreatedDate);
+                list = list.Where(x => x.CreatedDate == model.DateCreated);
             }
             return list.ToList();
         }
@@ -44,14 +44,14 @@ namespace VetClinicServer.BusinessLogic.Implementations
             Appointment appointment = new Appointment();
             appointment.CreatedDate = appointmentDto.CreatedDate;
             appointment.BehavioralNote = appointmentDto.BehavioralNote;
-            appointment.Animal = appointmentDto.Animal;
+            appointment.AnimalId = appointmentDto.AnimalId;
             appointment.Complaint = appointment.Complaint;
             _db.Appointments.Add(appointment);
             return Save();
         }
-        public bool Update(AppointmentDto appointmentDto)
+        public bool Update(Appointment appointment)
         {
-            _db.Update(appointmentDto);
+            _db.Update(appointment);
             return Save();
         }
         public bool Delete(int id)
