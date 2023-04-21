@@ -8,6 +8,6 @@ namespace VetClinicServer.Model.Models
         [Key]
         public int? Id { get; set; }
         public RoleType? Name { get; set; }
-        public List<User>? Users { get; set; } = new List<User>();
+        public List<User>? Users { get; set; } 
     }
 }

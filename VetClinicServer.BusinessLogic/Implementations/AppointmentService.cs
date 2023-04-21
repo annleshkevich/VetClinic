@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using VetClinicServer.BusinessLogic.Interfaces;
 using VetClinicServer.Common.Dto;
 using VetClinicServer.Model.Context;
@@ -17,25 +18,27 @@ namespace VetClinicServer.BusinessLogic.Implementations
         {
             return _db.Appointments.AsNoTracking().ToList();
         }
+        
         public Appointment Get(int id)
         {
             return _db.Appointments.Include(x=>x.Animal).FirstOrDefault(x=>x.Id==id);
         }
 
-        public List<Appointment> Get(AppoinmentFilterDto model)
+        public List<Appointment> Get(AppointmentFilterDto model)
         {
-            var list = _db.Appointments.AsQueryable();
-            if (model.Breed is not null)
+            var list = _db.Appointments.Include(x => x.Animal).AsQueryable();
+            if (!String.IsNullOrEmpty(model.Breed))
             {
-                list = list.Where(x => x.Animal.Breed.Contains(model.Breed.ToLower()));
+                list = list.Where(x => x.Animal.Breed == model.Breed.ToLower());
             }
-            if (model.Name is not null)
+            if (!String.IsNullOrEmpty(model.Name))
             {
                 list = list.Where(x => x.Animal.Name.Contains(model.Name.ToLower()));
             }
             if (model.DateCreated != null)
             {
                 list = list.Where(x => x.CreatedDate == model.DateCreated);
+              
             }
             return list.ToList();
         }
@@ -45,7 +48,12 @@ namespace VetClinicServer.BusinessLogic.Implementations
             appointment.CreatedDate = appointmentDto.CreatedDate;
             appointment.BehavioralNote = appointmentDto.BehavioralNote;
             appointment.AnimalId = appointmentDto.AnimalId;
-            appointment.Complaint = appointment.Complaint;
+
+
+            Animal? animal = _db.Animals.Find(appointmentDto.AnimalId);
+            appointment.Animal = animal;
+
+            appointment.Complaint = appointmentDto.Complaint;
             _db.Appointments.Add(appointment);
             return Save();
         }

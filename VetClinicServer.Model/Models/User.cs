@@ -14,6 +14,6 @@ namespace VetClinicServer.Model.Models
         [ForeignKey("RoleId")]
         public int? RoleId { get; set; }
         public Role? Role { get; set; }
-        public List<Animal>? Animals { get; set; } = new List<Animal>();
+        public List<Animal>? Animals { get; set; } 
     }
 }

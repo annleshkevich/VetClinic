@@ -26,7 +26,7 @@ namespace VetClinicServer.BusinessLogic.Implementations
             Animal animal = new Animal();
             animal.Breed = animalDto.Breed;
             animal.Age = animal.Age;
-            animal.Appointments = animal.Appointments;
+            //animal.Appointments = animal.Appointments;
             animal.Name = animal.Name;
             animal.Img = animal.Img;
 

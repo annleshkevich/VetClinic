@@ -29,9 +29,9 @@ namespace VetClinicServer.Controllers
             var result = _appointmentService.AllAppointments();
             return Ok(result);
         }
-        [HttpGet("Find")]
+        [HttpPost("Find")]
         [Authorize]
-        public IActionResult Get(AppoinmentFilterDto appointment)
+        public IActionResult Get(AppointmentFilterDto appointment)
         {
             var result = _appointmentService.Get(appointment);
             return Ok(result);
@@ -50,14 +50,18 @@ namespace VetClinicServer.Controllers
         {
             var currentUser = HttpContext.User;
             var appointment = _appointmentService.Get(appointmentDto.Id);
-            if (appointment.Animal.UserId != int.Parse(currentUser.FindFirstValue("sub")) || currentUser.FindFirstValue(ClaimTypes.Role) != "2")
+            if (appointment.Animal.UserId == int.Parse(currentUser.FindFirstValue("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")) || currentUser.FindFirstValue(ClaimTypes.Role) == "2")
             {
-                return Forbid();
+                appointment.BehavioralNote = appointmentDto.BehavioralNote;
+                appointment.CreatedDate = appointmentDto.CreatedDate;
+                appointment.AnimalId = appointmentDto.AnimalId;
+                appointment.Complaint = appointmentDto.Complaint;
+                return _appointmentService.Update(appointment) ? Ok("Appointment has been updated") : BadRequest("Appointment not updated");
+
             }
-            appointment.BehavioralNote = appointment.BehavioralNote;
-            appointment.CreatedDate = appointmentDto.CreatedDate;
-            //дописать пораметры
-            return _appointmentService.Update(appointment) ? Ok("Appointment has been updated") : BadRequest("Appointment not updated");
+            return Forbid();
+
+
         }
 
         [HttpDelete("Delete/{id}")]
@@ -68,7 +72,7 @@ namespace VetClinicServer.Controllers
             var appointment = _appointmentService.Get(id);
             if (appointment.Animal.UserId == int.Parse(currentUser.FindFirstValue("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")) || currentUser.FindFirstValue(ClaimTypes.Role) == "2")
             {
-            return _appointmentService.Delete(id) ? Ok("Appointment has been removed") : BadRequest("Appointment not deleted");
+                return _appointmentService.Delete(id) ? Ok("Appointment has been removed") : BadRequest("Appointment not deleted");
 
             }
             return Forbid();
