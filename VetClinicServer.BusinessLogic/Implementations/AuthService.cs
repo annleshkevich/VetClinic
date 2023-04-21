@@ -31,7 +31,7 @@ namespace VetClinicServer.BusinessLogic.Implementations
                 throw new Exception("Неверный пароль");
             }
             var token = _tokenService.GetToken(user);
-            var userDto = new UserDto { Login = user.Login, Email = user.Email, Role = new Role { Name = user.Role.Name }, AuthorizationHeader = $"Bearer {token}" };
+            var userDto = new UserDto { Login = user.Login, Email = user.Email, RoleId = user.RoleId, AuthorizationHeader = $"Bearer {token}" };
             return userDto;
         }
     }

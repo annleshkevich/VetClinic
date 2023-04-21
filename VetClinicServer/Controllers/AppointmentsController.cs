@@ -1,18 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.IdentityModel.Tokens.Jwt;
-using System.Numerics;
 using System.Security.Claims;
-using VetClinicServer.BusinessLogic.Implementations;
 using VetClinicServer.BusinessLogic.Interfaces;
 using VetClinicServer.Common.Dto;
-using VetClinicServer.Model.Models;
 
 namespace VetClinicServer.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class AppointmentsController : Controller
     {
         private readonly IAppointmentService _appointmentService;
@@ -60,8 +55,6 @@ namespace VetClinicServer.Controllers
 
             }
             return Forbid();
-
-
         }
 
         [HttpDelete("Delete/{id}")]
@@ -73,7 +66,6 @@ namespace VetClinicServer.Controllers
             if (appointment.Animal.UserId == int.Parse(currentUser.FindFirstValue("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")) || currentUser.FindFirstValue(ClaimTypes.Role) == "2")
             {
                 return _appointmentService.Delete(id) ? Ok("Appointment has been removed") : BadRequest("Appointment not deleted");
-
             }
             return Forbid();
         }

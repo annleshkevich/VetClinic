@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using VetClinicServer.BusinessLogic.Interfaces;
 using VetClinicServer.Common.Dto;
 using VetClinicServer.Model.Context;
@@ -18,10 +17,10 @@ namespace VetClinicServer.BusinessLogic.Implementations
         {
             return _db.Appointments.AsNoTracking().ToList();
         }
-        
+
         public Appointment Get(int id)
         {
-            return _db.Appointments.Include(x=>x.Animal).FirstOrDefault(x=>x.Id==id);
+            return _db.Appointments.Include(x => x.Animal).FirstOrDefault(x => x.Id == id);
         }
 
         public List<Appointment> Get(AppointmentFilterDto model)
@@ -38,7 +37,7 @@ namespace VetClinicServer.BusinessLogic.Implementations
             if (model.DateCreated != null)
             {
                 list = list.Where(x => x.CreatedDate == model.DateCreated);
-              
+
             }
             return list.ToList();
         }
@@ -48,7 +47,6 @@ namespace VetClinicServer.BusinessLogic.Implementations
             appointment.CreatedDate = appointmentDto.CreatedDate;
             appointment.BehavioralNote = appointmentDto.BehavioralNote;
             appointment.AnimalId = appointmentDto.AnimalId;
-
 
             Animal? animal = _db.Animals.Find(appointmentDto.AnimalId);
             appointment.Animal = animal;

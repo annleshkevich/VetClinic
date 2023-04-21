@@ -9,9 +9,16 @@ namespace VetClinicServer.BusinessLogic.Implementations
     public class UserService : IUserService
     {
         private readonly VetClinicContext _db;
-        public UserService(VetClinicContext db)
+        private readonly IHashService _hashService;
+        public UserService(VetClinicContext db, IHashService hashService)
         {
-            _db= db;
+            _db = db;
+            _hashService = hashService;
+
+        }
+        public IEnumerable<User> AllUsers()
+        {
+            return _db.Users.AsNoTracking().ToList();
         }
         public bool Create(User user)
         {
@@ -24,11 +31,29 @@ namespace VetClinicServer.BusinessLogic.Implementations
         }
         public User GetById(int id)
         {
-            return _db.Users.FirstOrDefault(x => x.Id == id);
+            return _db.Users.Include(x => x.Role).AsNoTracking().FirstOrDefault(x => x.Id == id);
         }
-        public bool Update(User user)
+        public bool Update(UserRegistrationDto userRegistrationDto)
         {
-            _db.Update(user);
+            if (GetByLogin(userRegistrationDto.Login) != null && userRegistrationDto.Login != _db.Users.Find(userRegistrationDto.Id).Login)
+            {
+                throw new Exception("Пользователь с таким логином уже существует");
+            }
+            else
+            {
+                var user = GetById(userRegistrationDto.Id);
+                _hashService.CreatePasswordHash(userRegistrationDto.Password, out byte[] passwordHash, out byte[] passwordSalt);
+
+
+                user.Login = userRegistrationDto.Login;
+                user.Email = userRegistrationDto.Email;
+                user.RoleId = 1;
+                user.PasswordHash = passwordHash;
+                user.PasswordSalt = passwordSalt;
+
+                _db.Update(user);
+            }
+
             return Save();
         }
         public bool Delete(int id)

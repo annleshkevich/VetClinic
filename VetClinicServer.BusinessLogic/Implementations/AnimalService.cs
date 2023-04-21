@@ -19,23 +19,24 @@ namespace VetClinicServer.BusinessLogic.Implementations
         }
         public Animal Get(int id)
         {
+            //
             return _db.Animals.FirstOrDefault(x => x.Id == id);
         }
         public bool Create(AnimalDto animalDto)
         {
             Animal animal = new Animal();
             animal.Breed = animalDto.Breed;
-            animal.Age = animal.Age;
-            //animal.Appointments = animal.Appointments;
-            animal.Name = animal.Name;
-            animal.Img = animal.Img;
+            animal.Age = animalDto.Age;
+            animal.Name = animalDto.Name;
+            animal.Img = animalDto.Img;
+            animal.User = animalDto.User;
 
             _db.Animals.Add(animal);
             return Save();
         }
-        public bool Update(AnimalDto animalDto)
+        public bool Update(Animal animal)
         {
-            _db.Update(animalDto);
+            _db.Update(animal);
             return Save();
         }
         public bool Delete(int id)

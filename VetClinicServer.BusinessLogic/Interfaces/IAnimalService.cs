@@ -8,7 +8,7 @@ namespace VetClinicServer.BusinessLogic.Interfaces
         IEnumerable<Animal> AllAnimals();
         Animal Get(int id);
         bool Create(AnimalDto model);
-        bool Update(AnimalDto model);
+        bool Update(Animal model);
         bool Delete(int id);
     }
 }

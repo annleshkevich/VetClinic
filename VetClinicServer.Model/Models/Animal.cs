@@ -13,6 +13,6 @@ namespace VetClinicServer.Model.Models
         public string? Img { get; set; } = string.Empty;
         [ForeignKey("UserId")]
         public int? UserId { get; set; }
-        public User User { get; set; }= new();
+        public User User { get; set; } = new();
     }
 }
