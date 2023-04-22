@@ -35,9 +35,10 @@ namespace VetClinicServer.BusinessLogic.Implementations
         }
         public bool Update(UserRegistrationDto userRegistrationDto)
         {
-            if (GetByLogin(userRegistrationDto.Login) != null && userRegistrationDto.Login != _db.Users.Find(userRegistrationDto.Id).Login)
+            if (GetByLogin(userRegistrationDto.Login) != null && userRegistrationDto.Id != GetByLogin(userRegistrationDto.Login).Id)
             {
-                throw new Exception("Пользователь с таким логином уже существует");
+                return false;
+                //throw new Exception("Пользователь с таким логином уже существует");
             }
             else
             {

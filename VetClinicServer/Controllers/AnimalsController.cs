@@ -9,10 +9,10 @@ namespace VetClinicServer.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AnimalController : Controller
+    public class AnimalsController : Controller
     {
         private readonly IAnimalService _animalService;
-        public AnimalController(IAnimalService animalService)
+        public AnimalsController(IAnimalService animalService)
         {
             _animalService = animalService;
         }
