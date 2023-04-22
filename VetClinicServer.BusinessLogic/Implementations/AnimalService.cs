@@ -29,7 +29,7 @@ namespace VetClinicServer.BusinessLogic.Implementations
             animal.Age = animalDto.Age;
             animal.Name = animalDto.Name;
             animal.Img = animalDto.Img;
-            animal.User = animalDto.User;
+            animal.UserId = animalDto.UserId;
 
             _db.Animals.Add(animal);
             return Save();

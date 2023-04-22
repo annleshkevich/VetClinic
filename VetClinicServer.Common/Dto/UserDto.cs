@@ -9,6 +9,6 @@ namespace VetClinicServer.Common.Dto
         public string Email { get; set; } = string.Empty;
         public int? RoleId { get; set; }
         public string AuthorizationHeader { get; set; } = string.Empty;
-        public List<Animal>? Animals { get; set; }
+        //public List<Animal>? Animals { get; set; }
     }
 }

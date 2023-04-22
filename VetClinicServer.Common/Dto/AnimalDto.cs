@@ -9,6 +9,7 @@ namespace VetClinicServer.Common.Dto
         public string Breed { get; set; } = string.Empty;
         public int Age { get; set; }
         public string Img { get; set; } = string.Empty;
-        public User User { get; set; }
+        public int UserId { get; set; }
+        //public User User { get; set; }
     }
 }

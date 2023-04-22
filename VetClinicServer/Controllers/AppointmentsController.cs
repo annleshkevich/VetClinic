@@ -45,7 +45,7 @@ namespace VetClinicServer.Controllers
         {
             var currentUser = HttpContext.User;
             var appointment = _appointmentService.Get(appointmentDto.Id);
-            if (appointment.Animal.UserId == int.Parse(currentUser.FindFirstValue("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")) || currentUser.FindFirstValue(ClaimTypes.Role) == "2")
+            if (appointment.Animal.UserId == int.Parse(currentUser.FindFirstValue("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")) || currentUser.FindFirstValue(ClaimTypes.Role) == "Admin")
             {
                 appointment.BehavioralNote = appointmentDto.BehavioralNote;
                 appointment.CreatedDate = appointmentDto.CreatedDate;
@@ -63,7 +63,7 @@ namespace VetClinicServer.Controllers
         {
             var currentUser = HttpContext.User;
             var appointment = _appointmentService.Get(id);
-            if (appointment.Animal.UserId == int.Parse(currentUser.FindFirstValue("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")) || currentUser.FindFirstValue(ClaimTypes.Role) == "2")
+            if (appointment.Animal.UserId == int.Parse(currentUser.FindFirstValue("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")) || currentUser.FindFirstValue(ClaimTypes.Role) == "Admin")
             {
                 return _appointmentService.Delete(id) ? Ok("Appointment has been removed") : BadRequest("Appointment not deleted");
             }

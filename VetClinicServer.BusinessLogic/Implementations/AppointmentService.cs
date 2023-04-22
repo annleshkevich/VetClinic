@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using VetClinicServer.BusinessLogic.Interfaces;
 using VetClinicServer.Common.Dto;
 using VetClinicServer.Model.Context;
@@ -34,10 +35,18 @@ namespace VetClinicServer.BusinessLogic.Implementations
             {
                 list = list.Where(x => x.Animal.Name.Contains(model.Name.ToLower()));
             }
-            if (model.DateCreated != null)
-            {
-                list = list.Where(x => x.CreatedDate == model.DateCreated);
 
+            DateTime data = (DateTime)model.DateCreated;
+            string dataString = data.ToShortDateString();
+            if (!String.IsNullOrEmpty(dataString))
+            {
+                //
+                foreach(Appointment appointment in _db.Appointments.ToList())
+                {
+                    DateTime dataDb = (DateTime)appointment.CreatedDate;
+                    if(dataDb.ToShortDateString() == dataString)
+                    list.ToList().Add(appointment);
+                }
             }
             return list.ToList();
         }

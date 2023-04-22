@@ -36,12 +36,12 @@ namespace VetClinicServer.Controllers
         {
             var currentUser = HttpContext.User;
             var animal = _animalService.Get(animalDto.Id);
-            if (animalDto.User.Id == int.Parse(currentUser.FindFirstValue("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")) || currentUser.FindFirstValue(ClaimTypes.Role) == "2")
+            if (animalDto.UserId == int.Parse(currentUser.FindFirstValue("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")) || currentUser.FindFirstValue(ClaimTypes.Role) == "Admin")
             {
 
                 animal.Age = animalDto.Age;
                 animal.Img = animalDto.Img;
-                animal.User = animalDto.User;
+                animal.UserId = animalDto.UserId;
                 animal.Breed = animalDto.Breed;
                 animal.Name = animalDto.Name;
                 return _animalService.Update(animal) ? Ok("Animal has been updated") : BadRequest("Animal not updated");
@@ -57,7 +57,7 @@ namespace VetClinicServer.Controllers
         {
             var currentUser = HttpContext.User;
             var animal = _animalService.Get(id);
-            if (animal.User.Id == int.Parse(currentUser.FindFirstValue("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")) || currentUser.FindFirstValue(ClaimTypes.Role) == "2")
+            if (animal.UserId == int.Parse(currentUser.FindFirstValue("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")) || currentUser.FindFirstValue(ClaimTypes.Role) == "Admin")
             {
                 return _animalService.Delete(id) ? Ok("Animal has been removed") : BadRequest("Animal not deleted");
             }
